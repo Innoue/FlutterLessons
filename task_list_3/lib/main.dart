@@ -34,9 +34,6 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Tarefas do dia'),
       ),
-      drawer: Drawer(
-        child: Center(child:Text("Configurações")),
-      ),
     );
   }
 }
