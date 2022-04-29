@@ -28,6 +28,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _task = TextEditingController();
 
+  List<Widget> listItems = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,20 +37,10 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('Tarefas do dia'),
       ),
       body: ListView.builder(
-        itemCount: 20,
-        itemBuilder: (BuildContext context, int position){
-          return ListTile(
-            title: Text("Title"),
-            subtitle: Text("SubTitle"),
-            trailing: Icon(Icons.favorite),
-            leading: Icon(Icons.add),
-            onTap: (){
-              print('Selected $position');
-            },
-          );
-        }
-      )
-      ,
+          itemCount: listItems.length,
+          itemBuilder: (BuildContext context, int position) {
+            return listItems[position];
+          }),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
@@ -70,7 +62,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      print(_task.text);
+                      setState(() {
+                        listItems.add(ListItens(title: _task.text));
+                        _task.text = "";
+                      });
                       Navigator.of(context).pop();
                     },
                     child: Text("OK"),
@@ -81,6 +76,28 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       ),
+    );
+  }
+}
+
+class ListItens extends StatefulWidget {
+  ListItens({Key? key, required this.title}) : super(key: key);
+
+  String title;
+
+  @override
+  State<ListItens> createState() => _ListItens();
+}
+
+class _ListItens extends State<ListItens> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(widget.title),
+      // subtitle: Text("SubTitle"),
+      trailing: Icon(Icons.done),
+      // leading: Icon(Icons.done),
+      onTap: () {},
     );
   }
 }
