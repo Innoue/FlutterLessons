@@ -34,6 +34,21 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Tarefas do dia'),
       ),
+      body: ListView.builder(
+        itemCount: 20,
+        itemBuilder: (BuildContext context, int position){
+          return ListTile(
+            title: Text("Title"),
+            subtitle: Text("SubTitle"),
+            trailing: Icon(Icons.favorite),
+            leading: Icon(Icons.add),
+            onTap: (){
+              print('Selected $position');
+            },
+          );
+        }
+      )
+      ,
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
