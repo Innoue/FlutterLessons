@@ -26,7 +26,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   TextEditingController _task = TextEditingController();
 
   @override
@@ -37,10 +36,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: (){
+        onPressed: () {
           showDialog(
-            context: context, 
-            builder: (BuildContext build){
+            context: context,
+            builder: (BuildContext build) {
               return AlertDialog(
                 title: Text("Adicionar Tarefa"),
                 content: Text("Conteúdo do Dialog"),
@@ -49,22 +48,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     controller: _task,
                   ),
                   TextButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.of(context).pop();
-                    }, 
-                    child: Text("Cancelar")
+                    },
+                    child: Text("Cancelar"),
                   ),
                   TextButton(
-                    onPressed: (){
+                    onPressed: () {
                       print(_task.text);
                       Navigator.of(context).pop();
                     },
-                    child: Text("OK")
+                    child: Text("OK"),
                   ),
                 ],
-
               );
-            }
+            },
           );
         },
       ),
