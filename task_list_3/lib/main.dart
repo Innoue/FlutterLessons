@@ -30,17 +30,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> listItems = [];
 
+  bool isDone = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tarefas do dia'),
+        title: Center(child: Text('Tarefas do dia')),
       ),
-      body: ListView.builder(
-          itemCount: listItems.length,
-          itemBuilder: (BuildContext context, int position) {
-            return listItems[position];
-          }),
+      body: ListView.separated(
+        itemCount: listItems.length,
+        itemBuilder: (BuildContext context, int position) {
+          return listItems[position];
+        },
+        separatorBuilder: (BuildContext context, int position) => Divider(
+          color: Colors.grey.shade700,
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
@@ -49,26 +55,40 @@ class _MyHomePageState extends State<MyHomePage> {
             builder: (BuildContext build) {
               return AlertDialog(
                 title: Text("Adicionar Tarefa"),
-                content: Text("Conteúdo do Dialog"),
+                // content: Text("Informe a nova tarefa"),
                 actions: [
-                  TextField(
-                    controller: _task,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: TextField(
+                      controller: _task,
+                    ),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("Cancelar"),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        listItems.add(ListItens(title: _task.text));
-                        _task.text = "";
-                      });
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("OK"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red.shade100,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Cancelar"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            listItems.add(ListItens(title: _task.text));
+                            _task.text = "";
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("OK"),
+                      ),
+                    ],
                   ),
                 ],
               );
@@ -81,9 +101,11 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class ListItens extends StatefulWidget {
-  ListItens({Key? key, required this.title}) : super(key: key);
+  ListItens({Key? key, required this.title, this.isDone = false})
+      : super(key: key);
 
   String title;
+  bool isDone;
 
   @override
   State<ListItens> createState() => _ListItens();
@@ -94,10 +116,13 @@ class _ListItens extends State<ListItens> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.title),
-      // subtitle: Text("SubTitle"),
-      trailing: Icon(Icons.done),
-      // leading: Icon(Icons.done),
-      onTap: () {},
+      trailing: widget.isDone ? Icon(Icons.done) : null,
+      // leading: widget.isDone ? Icon(Icons.done) : null,
+      onTap: () {
+        setState(() {
+          widget.isDone = !widget.isDone;
+        });
+      },
     );
   }
 }
