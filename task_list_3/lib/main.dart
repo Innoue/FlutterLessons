@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
           return listItems[position];
         },
         separatorBuilder: (BuildContext context, int position) => Divider(
-          color: Colors.grey.shade700,
+          color: Colors.grey.shade600,
         ),
       ),
       floatingActionButton: FloatingActionButton(
