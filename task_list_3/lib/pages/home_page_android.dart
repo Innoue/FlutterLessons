@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import '../pages/new_task_page.dart';
+import '../data/task.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -34,7 +34,18 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => NewTaskPage()));
+          final Future<Task?> future = Navigator.push(
+              context, MaterialPageRoute(builder: (context) => NewTaskPage()));
+          future.then((task) {
+            setState(() {
+              listItems.add(
+                ListItens(
+                  title: task?.title ?? '',
+                  description: task?.description ?? '',
+                ),
+              );
+            });
+          });
         },
       ),
     );
@@ -42,10 +53,15 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class ListItens extends StatefulWidget {
-  ListItens({Key? key, required this.title, this.isDone = false})
+  ListItens(
+      {Key? key,
+      required this.title,
+      this.description = '',
+      this.isDone = false})
       : super(key: key);
 
   String title;
+  String description;
   bool isDone;
 
   @override
@@ -57,6 +73,7 @@ class _ListItens extends State<ListItens> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.title),
+      subtitle: Text(widget.description),
       trailing: widget.isDone ? Icon(Icons.done) : null,
       // leading: widget.isDone ? Icon(Icons.done) : null,
       onTap: () {

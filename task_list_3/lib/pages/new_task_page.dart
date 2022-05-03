@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_list_3/data/task.dart';
 
 class NewTaskPage extends StatelessWidget {
   NewTaskPage({Key? key}) : super(key: key);
@@ -44,11 +45,7 @@ class NewTaskPage extends StatelessWidget {
                 height: 45,
                 child: ElevatedButton(
                   child: Text("Criar"),
-                  onPressed: () {
-                    String title = _titleTask.text.toString();
-                    String desc = _descTask.text.toString();
-                    print("Title = $title \n Description = $desc");
-                  },
+                  onPressed: () => _createTask(context),
                 ),
               ),
             ),
@@ -57,4 +54,15 @@ class NewTaskPage extends StatelessWidget {
       ),
     );
   }
+  void _createTask(BuildContext context){
+    String title = _titleTask.text.toString();
+    String desc = _descTask.text.toString();
+
+    final task = Task(title: title, description: desc);
+
+    Navigator.pop(context, task);
+
+  }
+
 }
+
