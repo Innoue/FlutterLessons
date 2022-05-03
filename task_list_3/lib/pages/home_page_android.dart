@@ -34,17 +34,18 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          final Future<Task?> future = Navigator.push(
-              context, MaterialPageRoute(builder: (context) => NewTaskPage()));
+          final Future<Task?> future = Navigator.push(context, MaterialPageRoute(builder: (context) => NewTaskPage()));
           future.then((task) {
-            setState(() {
-              listItems.add(
-                ListItens(
-                  title: task?.title ?? '',
-                  description: task?.description ?? '',
-                ),
-              );
-            });
+            if(task != null){
+              setState(() {
+                listItems.add(
+                  ListItens(
+                    title: task.title,
+                    description: task.description,
+                  ),
+                );
+              });
+            }
           });
         },
       ),
@@ -72,8 +73,8 @@ class _ListItens extends State<ListItens> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(widget.title),
-      subtitle: Text(widget.description),
+      title: Text(widget.title, style: Theme.of(context).textTheme.headline5,),
+      subtitle: Text(widget.description, style: Theme.of(context).textTheme.headline6,),
       trailing: widget.isDone ? Icon(Icons.done) : null,
       // leading: widget.isDone ? Icon(Icons.done) : null,
       onTap: () {

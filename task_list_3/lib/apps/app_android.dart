@@ -12,6 +12,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       home: MyHomePage(),
+      theme: ThemeData(
+        textTheme: TextTheme(
+          headline5: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          headline6: TextStyle(fontStyle: FontStyle.italic, fontSize: 15),
+        ),
+      ),
     );
   }
 }
