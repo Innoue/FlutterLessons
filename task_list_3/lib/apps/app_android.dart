@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../pages/home_page_android.dart';
-
+import '../pages/new_task_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: const MyHomePage(),
+      home: NewTask(),
     );
   }
 }
