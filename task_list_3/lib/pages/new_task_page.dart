@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class NewTask extends StatelessWidget {
-  NewTask({Key? key}) : super(key: key);
+class NewTaskPage extends StatelessWidget {
+  NewTaskPage({Key? key}) : super(key: key);
 
   TextEditingController _titleTask = TextEditingController();
   TextEditingController _descTask = TextEditingController();
@@ -9,6 +9,7 @@ class NewTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Nova Tarefa"),),
       body: SafeArea(
         child: Column(
           children: [

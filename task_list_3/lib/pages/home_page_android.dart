@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../pages/new_task_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -33,50 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext build) {
-              return AlertDialog(
-                title: Text("Adicionar Tarefa"),
-                // content: Text("Informe a nova tarefa"),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: TextField(
-                      controller: _task,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red.shade100,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("Cancelar"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            listItems.add(ListItens(title: _task.text));
-                            _task.text = "";
-                          });
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("OK"),
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            },
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => NewTaskPage()));
         },
       ),
     );
@@ -109,3 +67,49 @@ class _ListItens extends State<ListItens> {
     );
   }
 }
+
+//Show dialog descontinuado
+// showDialog(
+//   context: context,
+//   builder: (BuildContext build) {
+//     return AlertDialog(
+//       title: Text("Adicionar Tarefa"),
+//       // content: Text("Informe a nova tarefa"),
+//       actions: [
+//         Padding(
+//           padding: const EdgeInsets.symmetric(horizontal: 15.0),
+//           child: TextField(
+//             controller: _task,
+//           ),
+//         ),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.end,
+//           children: [
+//             TextButton(
+//               style: TextButton.styleFrom(
+//                 textStyle: TextStyle(
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.red.shade100,
+//                 ),
+//               ),
+//               onPressed: () {
+//                 Navigator.of(context).pop();
+//               },
+//               child: Text("Cancelar"),
+//             ),
+//             TextButton(
+//               onPressed: () {
+//                 setState(() {
+//                   listItems.add(ListItens(title: _task.text));
+//                   _task.text = "";
+//                 });
+//                 Navigator.of(context).pop();
+//               },
+//               child: Text("OK"),
+//             ),
+//           ],
+//         ),
+//       ],
+//     );
+//   },
+// );
