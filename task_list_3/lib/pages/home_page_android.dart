@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:task_list_3/repository/TaskRepository.dart';
 import '../pages/new_task_page.dart';
 import '../data/task.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -14,24 +12,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _task = TextEditingController();
-
   List<Task> listItems = [];
-  bool isDone = false;
-
-  late final SharedPreferences shared;
+  TaskRepository repository = TaskRepository();
 
   @override
   void initState() {
-    SharedPreferences.getInstance().then((value){
-      shared = value;
-      
-      final listTaskString = shared.getString('taskList');
-      List listJson = jsonDecode(listTaskString ?? '[]');
-      final listTask = listJson.map((e) => Task.fromJson(e)).toList();
-
-      setState(() {
-        listItems.addAll(listTask);
-      });
+    setState(() {
+      super.initState();
+      repository.getTasks().then((value) => listItems.addAll(value));
     });
   }
 
@@ -64,8 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _createTask(BuildContext context) {
-    final Future<Task?> future = Navigator.push(context, MaterialPageRoute(builder: (context) => NewTaskPage()));
-    future.then((task) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => NewTaskPage())).then((task) {
       if(task != null){
         setState(() {
           listItems.add(task);
@@ -76,15 +63,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _deleteTask(int position, Task task, BuildContext context) {
-    listItems.removeAt(position);
-    _saveList();
-    
+    setState(() {
+      listItems.removeAt(position);
+      _saveList();
+    });
     final snackBar = SnackBar(
       content: Text('Tarefa ${task.title} excluída!'),
       action: SnackBarAction(
         label: 'Desfazer',
         onPressed: (){
-    
           setState(() {
             listItems.insert(position, task);
             _saveList();
@@ -96,9 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _saveList() {
-    String jsonListTask = jsonEncode(listItems);
-    print(jsonListTask);
-    shared.setString('taskList', jsonListTask);
+    repository.saveTasks(listItems);
   }
 }
 
@@ -142,10 +127,10 @@ class _ListItens extends State<ListItens> {
         title: Text(widget.task.title, style: Theme.of(context).textTheme.headline3,),
         subtitle: Text(widget.task.description, style: Theme.of(context).textTheme.headline4,),
         trailing: widget.task.isDone ? Icon(Icons.done) : null,
-        // leading: widget.isDone ? Icon(Icons.done) : null,
         onTap: () {
+          print(widget.task.isDone);
           setState(() {
-            widget.task.isDone = !widget.task.isDone;
+            widget.task.isDone = true;
             widget.onChangedValue();
           });
         },
