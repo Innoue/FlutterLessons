@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '../pages/new_task_page.dart';
 import '../data/task.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -12,9 +15,26 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _task = TextEditingController();
 
-  List<Widget> listItems = [];
-
+  List<Task> listItems = [];
   bool isDone = false;
+
+  late final SharedPreferences shared;
+
+  @override
+  void initState() {
+    SharedPreferences.getInstance().then((value){
+      shared = value;
+      
+      print(shared.getString('taskList'));
+      final listTaskString = shared.getString('taskList');
+      List listJson = jsonDecode(listTaskString ?? '[]');
+      final listTask = listJson.map((e) => Task.fromJson(e)).toList();
+
+      setState(() {
+        listItems.addAll(listTask);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ListView.separated(
         itemCount: listItems.length,
         itemBuilder: (BuildContext context, int position) {
-          return listItems[position];
+          final task = listItems[position];
+          return ListItens(title: task.title, description: task.description );
         },
         separatorBuilder: (BuildContext context, int position) => Divider(
           color: Colors.grey.shade600,
@@ -38,12 +59,10 @@ class _MyHomePageState extends State<MyHomePage> {
           future.then((task) {
             if(task != null){
               setState(() {
-                listItems.add(
-                  ListItens(
-                    title: task.title,
-                    description: task.description,
-                  ),
-                );
+                listItems.add(task);
+                String jsonListTask = jsonEncode(listItems);
+                print(jsonListTask);
+                shared.setString('taskList', jsonListTask);
               });
             }
           });
@@ -73,8 +92,8 @@ class _ListItens extends State<ListItens> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(widget.title, style: Theme.of(context).textTheme.headline5,),
-      subtitle: Text(widget.description, style: Theme.of(context).textTheme.headline6,),
+      title: Text(widget.title, style: Theme.of(context).textTheme.headline3,),
+      subtitle: Text(widget.description, style: Theme.of(context).textTheme.headline4,),
       trailing: widget.isDone ? Icon(Icons.done) : null,
       // leading: widget.isDone ? Icon(Icons.done) : null,
       onTap: () {

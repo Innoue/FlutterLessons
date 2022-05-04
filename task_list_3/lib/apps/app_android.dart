@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(),
       theme: ThemeData(
         textTheme: TextTheme(
-          headline5: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          headline6: TextStyle(fontStyle: FontStyle.italic, fontSize: 15),
+          headline3: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          headline4: TextStyle(fontStyle: FontStyle.italic, fontSize: 15),
         ),
       ),
     );
