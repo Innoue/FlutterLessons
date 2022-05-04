@@ -45,35 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
         itemCount: listItems.length,
         itemBuilder: (BuildContext context, int position) {
           final task = listItems[position];
-          return ListItens(title: task.title, description: task.description,isDone: task.isDone, onChangedValue: (){
+          return ListItens(task: task, onChangedValue: (){
             listItems[position].isDone = !listItems[position].isDone;
-            String jsonListTask = jsonEncode(listItems);
-            print(jsonListTask);
-            shared.setString('taskList', jsonListTask);
+            _saveList();
           },
-          onDeleteItem: (){
-            listItems.removeAt(position);
-            String jsonListTask = jsonEncode(listItems);
-            print(jsonListTask);
-            shared.setString('taskList', jsonListTask);
-
-            final snackBar = SnackBar(
-              content: Text('Tarefa ${task.title} excluída!'),
-              action: SnackBarAction(
-                label: 'Desfazer',
-                onPressed: (){
-
-                  setState(() {
-                    listItems.insert(position, task);
-                    String jsonListTask = jsonEncode(listItems);
-                    print(jsonListTask);
-                    shared.setString('taskList', jsonListTask);
-                  });
-                },
-                ),
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
+          onDeleteItem: () =>_deleteTask(position, task, context)
           ,);
         },
         separatorBuilder: (BuildContext context, int position) => Divider(
@@ -82,38 +58,60 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () {
-          final Future<Task?> future = Navigator.push(context, MaterialPageRoute(builder: (context) => NewTaskPage()));
-          future.then((task) {
-            if(task != null){
-              setState(() {
-                listItems.add(task);
-                String jsonListTask = jsonEncode(listItems);
-                print(jsonListTask);
-                shared.setString('taskList', jsonListTask);
-              });
-            }
-          });
-        },
+        onPressed: () => _createTask(context),
       ),
     );
+  }
+
+  void _createTask(BuildContext context) {
+    final Future<Task?> future = Navigator.push(context, MaterialPageRoute(builder: (context) => NewTaskPage()));
+    future.then((task) {
+      if(task != null){
+        setState(() {
+          listItems.add(task);
+          _saveList();
+        });
+      }
+    });
+  }
+
+  void _deleteTask(int position, Task task, BuildContext context) {
+    listItems.removeAt(position);
+    _saveList();
+    
+    final snackBar = SnackBar(
+      content: Text('Tarefa ${task.title} excluída!'),
+      action: SnackBarAction(
+        label: 'Desfazer',
+        onPressed: (){
+    
+          setState(() {
+            listItems.insert(position, task);
+            _saveList();
+          });
+        },
+        ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _saveList() {
+    String jsonListTask = jsonEncode(listItems);
+    print(jsonListTask);
+    shared.setString('taskList', jsonListTask);
   }
 }
 
 class ListItens extends StatefulWidget {
   ListItens(
       {Key? key,
-      required this.title,
-      this.description = '',
-      this.isDone = false,
+      required this.task,
       required this.onChangedValue,
       required this.onDeleteItem,
       })
       : super(key: key);
 
-  String title;
-  String description;
-  bool isDone;
+  Task task;
   VoidCallback onChangedValue;
   VoidCallback onDeleteItem;
 
@@ -141,13 +139,13 @@ class _ListItens extends State<ListItens> {
         ),
       ),
       child: ListTile(
-        title: Text(widget.title, style: Theme.of(context).textTheme.headline3,),
-        subtitle: Text(widget.description, style: Theme.of(context).textTheme.headline4,),
-        trailing: widget.isDone ? Icon(Icons.done) : null,
+        title: Text(widget.task.title, style: Theme.of(context).textTheme.headline3,),
+        subtitle: Text(widget.task.description, style: Theme.of(context).textTheme.headline4,),
+        trailing: widget.task.isDone ? Icon(Icons.done) : null,
         // leading: widget.isDone ? Icon(Icons.done) : null,
         onTap: () {
           setState(() {
-            widget.isDone = !widget.isDone;
+            widget.task.isDone = !widget.task.isDone;
             widget.onChangedValue();
           });
         },
