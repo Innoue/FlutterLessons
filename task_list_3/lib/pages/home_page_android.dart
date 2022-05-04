@@ -25,7 +25,6 @@ class _MyHomePageState extends State<MyHomePage> {
     SharedPreferences.getInstance().then((value){
       shared = value;
       
-      print(shared.getString('taskList'));
       final listTaskString = shared.getString('taskList');
       List listJson = jsonDecode(listTaskString ?? '[]');
       final listTask = listJson.map((e) => Task.fromJson(e)).toList();
@@ -46,7 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
         itemCount: listItems.length,
         itemBuilder: (BuildContext context, int position) {
           final task = listItems[position];
-          return ListItens(title: task.title, description: task.description );
+          return ListItens(title: task.title, description: task.description,isDone: task.isDone, onChangedValue: (){
+            listItems[position].isDone = !listItems[position].isDone;
+            String jsonListTask = jsonEncode(listItems);
+            shared.setString('taskList', jsonListTask);
+          },);
         },
         separatorBuilder: (BuildContext context, int position) => Divider(
           color: Colors.grey.shade600,
@@ -77,12 +80,14 @@ class ListItens extends StatefulWidget {
       {Key? key,
       required this.title,
       this.description = '',
-      this.isDone = false})
+      this.isDone = false,
+      required this.onChangedValue})
       : super(key: key);
 
   String title;
   String description;
   bool isDone;
+  VoidCallback onChangedValue;
 
   @override
   State<ListItens> createState() => _ListItens();
@@ -99,6 +104,7 @@ class _ListItens extends State<ListItens> {
       onTap: () {
         setState(() {
           widget.isDone = !widget.isDone;
+          widget.onChangedValue();
         });
       },
     );
