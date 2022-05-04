@@ -64,7 +64,6 @@ class _MyHomePageState extends State<MyHomePage> {
               setState(() {
                 listItems.add(task);
                 String jsonListTask = jsonEncode(listItems);
-                print(jsonListTask);
                 shared.setString('taskList', jsonListTask);
               });
             }
