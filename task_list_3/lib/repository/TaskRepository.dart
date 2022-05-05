@@ -12,13 +12,13 @@ class TaskRepository{
     shared = await SharedPreferences.getInstance();
     final listTaskString = shared.getString(listTaskKey);
     List listJson = jsonDecode(listTaskString ?? '[]');
-    print(listTaskString);
+    //print(listTaskString);
     return listJson.map((e) => Task.fromJson(e)).toList();
   }
 
   void saveTasks(List<Task> taskList){
     String jsonListTask = jsonEncode(taskList);
-    print(jsonListTask);
+    //print(jsonListTask);
     shared.setString(listTaskKey, jsonListTask);
   }
 }

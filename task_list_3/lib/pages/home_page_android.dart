@@ -34,7 +34,6 @@ class _MyHomePageState extends State<MyHomePage> {
         itemBuilder: (BuildContext context, int position) {
           final task = listItems[position];
           return ListItens(task: task, onChangedValue: (){
-            listItems[position].isDone = !listItems[position].isDone;
             _saveList();
           },
           onDeleteItem: () =>_deleteTask(position, task, context)
@@ -128,9 +127,8 @@ class _ListItens extends State<ListItens> {
         subtitle: Text(widget.task.description, style: Theme.of(context).textTheme.headline4,),
         trailing: widget.task.isDone ? Icon(Icons.done) : null,
         onTap: () {
-          print(widget.task.isDone);
           setState(() {
-            widget.task.isDone = true;
+            widget.task.isDone = !widget.task.isDone;
             widget.onChangedValue();
           });
         },
